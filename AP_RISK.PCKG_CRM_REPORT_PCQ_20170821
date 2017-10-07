@@ -1,0 +1,362 @@
+MERGE INTO AP_RISK.PCQ_CRM_REPORT_CAMP BASE
+USING (SELECT FC.SKP_CREDIT_CASE,
+              CCS2.NAME_CREDIT_STATUS AS CON_STATUS,
+              FC.DATE_FIRST_DUE,
+              FC.DTIME_SIGNATURE_CONTRACT,
+              FC.DTIME_ACTIVATION,
+              FC.NUM_MIN_INST_DEF90_DD,
+              FC.NUM_MIN_INST_DEF60_DD,
+              FC.NUM_MIN_INST_DEF30_DD,
+              FC.NUM_MIN_INST_DEF15_DD,
+              FC.NUM_MIN_INST_DEF10_DD,
+              FC.NUM_OBSERV_DEF90_MAXINST,
+              FC.NUM_OBSERV_DEF60_MAXINST,
+              FC.NUM_OBSERV_DEF30_MAXINST,
+              FC.NUM_OBSERV_DEF15_MAXINST,
+              FC.NUM_OBSERV_DEF10_MAXINST,
+              CASE
+                WHEN ADD_MONTHS(FC.DATE_FIRST_DUE, 0) + 10 < TRUNC(SYSDATE) THEN
+                 1
+              END AS FPD10_OBS,
+              CASE
+                WHEN ADD_MONTHS(FC.DATE_FIRST_DUE, 0) + 10 < TRUNC(SYSDATE) AND
+                     FC.NUM_MIN_INST_DEF10_DD = 1 THEN
+                 1
+              END AS FPD10,
+              CASE
+                WHEN ADD_MONTHS(FC.DATE_FIRST_DUE, 0) + 15 < TRUNC(SYSDATE) THEN
+                 1
+              END AS FPD15_OBS,
+              CASE
+                WHEN ADD_MONTHS(FC.DATE_FIRST_DUE, 0) + 15 < TRUNC(SYSDATE) AND
+                     FC.NUM_MIN_INST_DEF15_DD = 1 THEN
+                 1
+              END AS FPD15,
+              CASE
+                WHEN ADD_MONTHS(FC.DATE_FIRST_DUE, 0) + 30 < TRUNC(SYSDATE) THEN
+                 1
+              END AS FPD30_OBS,
+              CASE
+                WHEN ADD_MONTHS(FC.DATE_FIRST_DUE, 0) + 30 < TRUNC(SYSDATE) AND
+                     FC.NUM_MIN_INST_DEF30_DD = 1 THEN
+                 1
+              END AS FPD30,
+              CASE
+                WHEN ADD_MONTHS(FC.DATE_FIRST_DUE, 0) + 60 < TRUNC(SYSDATE) THEN
+                 1
+              END AS FPD60_OBS,
+              CASE
+                WHEN ADD_MONTHS(FC.DATE_FIRST_DUE, 0) + 60 < TRUNC(SYSDATE) AND
+                     FC.NUM_MIN_INST_DEF60_DD = 1 THEN
+                 1
+              END AS FPD60,
+              CASE
+                WHEN ADD_MONTHS(FC.DATE_FIRST_DUE, 0) + 90 < TRUNC(SYSDATE) THEN
+                 1
+              END AS FPD90_OBS,
+              CASE
+                WHEN ADD_MONTHS(FC.DATE_FIRST_DUE, 0) + 90 < TRUNC(SYSDATE) AND
+                     FC.NUM_MIN_INST_DEF90_DD = 1 THEN
+                 1
+              END AS FPD90,
+              CASE
+                WHEN ADD_MONTHS(FC.DATE_FIRST_DUE, 1) + 10 < TRUNC(SYSDATE) THEN
+                 1
+              END AS SPD10_OBS,
+              CASE
+                WHEN ADD_MONTHS(FC.DATE_FIRST_DUE, 1) + 10 < TRUNC(SYSDATE) AND
+                     FC.NUM_MIN_INST_DEF10_DD = 2 THEN
+                 1
+              END AS SPD10,
+              CASE
+                WHEN ADD_MONTHS(FC.DATE_FIRST_DUE, 1) + 30 < TRUNC(SYSDATE) THEN
+                 1
+              END AS SPD30_OBS,
+              CASE
+                WHEN ADD_MONTHS(FC.DATE_FIRST_DUE, 1) + 30 < TRUNC(SYSDATE) AND
+                     FC.NUM_MIN_INST_DEF30_DD = 2 THEN
+                 1
+              END AS SPD30,
+              CASE
+                WHEN ADD_MONTHS(FC.DATE_FIRST_DUE, 1) + 60 < TRUNC(SYSDATE) THEN
+                 1
+              END AS SPD60_OBS,
+              CASE
+                WHEN ADD_MONTHS(FC.DATE_FIRST_DUE, 1) + 60 < TRUNC(SYSDATE) AND
+                     FC.NUM_MIN_INST_DEF60_DD = 2 THEN
+                 1
+              END AS SPD60,
+              CASE
+                WHEN ADD_MONTHS(FC.DATE_FIRST_DUE, 1) + 90 < TRUNC(SYSDATE) THEN
+                 1
+              END AS SPD90_OBS,
+              CASE
+                WHEN ADD_MONTHS(FC.DATE_FIRST_DUE, 1) + 90 < TRUNC(SYSDATE) AND
+                     FC.NUM_MIN_INST_DEF90_DD = 2 THEN
+                 1
+              END AS SPD90,
+              CASE
+                WHEN ADD_MONTHS(FC.DATE_FIRST_DUE, 2) + 10 < TRUNC(SYSDATE) THEN
+                 1
+              END AS TPD10_OBS,
+              CASE
+                WHEN ADD_MONTHS(FC.DATE_FIRST_DUE, 2) + 10 < TRUNC(SYSDATE) AND
+                     FC.NUM_MIN_INST_DEF10_DD = 3 THEN
+                 1
+              END AS TPD10,
+              CASE
+                WHEN ADD_MONTHS(FC.DATE_FIRST_DUE, 2) + 30 < TRUNC(SYSDATE) THEN
+                 1
+              END AS TPD30_OBS,
+              CASE
+                WHEN ADD_MONTHS(FC.DATE_FIRST_DUE, 2) + 30 < TRUNC(SYSDATE) AND
+                     FC.NUM_MIN_INST_DEF30_DD = 3 THEN
+                 1
+              END AS TPD30,
+              CASE
+                WHEN ADD_MONTHS(FC.DATE_FIRST_DUE, 2) + 60 < TRUNC(SYSDATE) THEN
+                 1
+              END AS TPD60_OBS,
+              CASE
+                WHEN ADD_MONTHS(FC.DATE_FIRST_DUE, 2) + 60 < TRUNC(SYSDATE) AND
+                     FC.NUM_MIN_INST_DEF60_DD = 3 THEN
+                 1
+              END AS TPD60,
+              CASE
+                WHEN ADD_MONTHS(FC.DATE_FIRST_DUE, 2) + 90 < TRUNC(SYSDATE) THEN
+                 1
+              END AS TPD90_OBS,
+              CASE
+                WHEN ADD_MONTHS(FC.DATE_FIRST_DUE, 2) + 90 < TRUNC(SYSDATE) AND
+                     FC.NUM_MIN_INST_DEF90_DD = 3 THEN
+                 1
+              END AS TPD90,
+              CASE
+                WHEN ADD_MONTHS(FC.DATE_FIRST_DUE, 3) + 10 < TRUNC(SYSDATE) THEN
+                 1
+              END AS QPD10_OBS,
+              CASE
+                WHEN ADD_MONTHS(FC.DATE_FIRST_DUE, 3) + 10 < TRUNC(SYSDATE) AND
+                     FC.NUM_MIN_INST_DEF10_DD = 4 THEN
+                 1
+              END AS QPD10,
+              CASE
+                WHEN ADD_MONTHS(FC.DATE_FIRST_DUE, 3) + 30 < TRUNC(SYSDATE) THEN
+                 1
+              END AS QPD30_OBS,
+              CASE
+                WHEN ADD_MONTHS(FC.DATE_FIRST_DUE, 3) + 30 < TRUNC(SYSDATE) AND
+                     FC.NUM_MIN_INST_DEF30_DD = 4 THEN
+                 1
+              END AS QPD30,
+              CASE
+                WHEN ADD_MONTHS(FC.DATE_FIRST_DUE, 3) + 60 < TRUNC(SYSDATE) THEN
+                 1
+              END AS QPD60_OBS,
+              CASE
+                WHEN ADD_MONTHS(FC.DATE_FIRST_DUE, 3) + 60 < TRUNC(SYSDATE) AND
+                     FC.NUM_MIN_INST_DEF60_DD = 4 THEN
+                 1
+              END AS QPD60,
+              CASE
+                WHEN ADD_MONTHS(FC.DATE_FIRST_DUE, 3) + 90 < TRUNC(SYSDATE) THEN
+                 1
+              END AS QPD90_OBS,
+              CASE
+                WHEN ADD_MONTHS(FC.DATE_FIRST_DUE, 3) + 90 < TRUNC(SYSDATE) AND
+                     FC.NUM_MIN_INST_DEF90_DD = 4 THEN
+                 1
+              END AS QPD90,
+              CASE
+                WHEN ADD_MONTHS(FC.DATE_FIRST_DUE, 1) + 10 < TRUNC(SYSDATE) THEN
+                 1
+              END AS FSPD10_OBS,
+              CASE
+                WHEN ADD_MONTHS(FC.DATE_FIRST_DUE, 1) + 10 < TRUNC(SYSDATE) AND
+                     FC.NUM_MIN_INST_DEF10_DD <= 2 THEN
+                 1
+              END AS FSPD10,
+              CASE
+                WHEN ADD_MONTHS(FC.DATE_FIRST_DUE, 1) + 30 < TRUNC(SYSDATE) THEN
+                 1
+              END AS FSPD30_OBS,
+              CASE
+                WHEN ADD_MONTHS(FC.DATE_FIRST_DUE, 1) + 30 < TRUNC(SYSDATE) AND
+                     FC.NUM_MIN_INST_DEF30_DD <= 2 THEN
+                 1
+              END AS FSPD30,
+              CASE
+                WHEN ADD_MONTHS(FC.DATE_FIRST_DUE, 1) + 60 < TRUNC(SYSDATE) THEN
+                 1
+              END AS FSPD60_OBS,
+              CASE
+                WHEN ADD_MONTHS(FC.DATE_FIRST_DUE, 1) + 60 < TRUNC(SYSDATE) AND
+                     FC.NUM_MIN_INST_DEF60_DD <= 2 THEN
+                 1
+              END AS FSPD60,
+              CASE
+                WHEN ADD_MONTHS(FC.DATE_FIRST_DUE, 1) + 90 < TRUNC(SYSDATE) THEN
+                 1
+              END AS FSPD90_OBS,
+              CASE
+                WHEN ADD_MONTHS(FC.DATE_FIRST_DUE, 1) + 90 < TRUNC(SYSDATE) AND
+                     FC.NUM_MIN_INST_DEF90_DD <= 2 THEN
+                 1
+              END AS FSPD90,
+              CASE
+                WHEN ADD_MONTHS(FC.DATE_FIRST_DUE, 2) + 10 < TRUNC(SYSDATE) THEN
+                 1
+              END AS FSTPD10_OBS,
+              CASE
+                WHEN ADD_MONTHS(FC.DATE_FIRST_DUE, 2) + 10 < TRUNC(SYSDATE) AND
+                     FC.NUM_MIN_INST_DEF10_DD <= 3 THEN
+                 1
+              END AS FSTPD10,
+              CASE
+                WHEN ADD_MONTHS(FC.DATE_FIRST_DUE, 2) + 30 < TRUNC(SYSDATE) THEN
+                 1
+              END AS FSTPD30_OBS,
+              CASE
+                WHEN ADD_MONTHS(FC.DATE_FIRST_DUE, 2) + 30 < TRUNC(SYSDATE) AND
+                     FC.NUM_MIN_INST_DEF30_DD <= 3 THEN
+                 1
+              END AS FSTPD30,
+              CASE
+                WHEN ADD_MONTHS(FC.DATE_FIRST_DUE, 2) + 60 < TRUNC(SYSDATE) THEN
+                 1
+              END AS FSTPD60_OBS,
+              CASE
+                WHEN ADD_MONTHS(FC.DATE_FIRST_DUE, 2) + 60 < TRUNC(SYSDATE) AND
+                     FC.NUM_MIN_INST_DEF60_DD <= 3 THEN
+                 1
+              END AS FSTPD60,
+              CASE
+                WHEN ADD_MONTHS(FC.DATE_FIRST_DUE, 2) + 90 < TRUNC(SYSDATE) THEN
+                 1
+              END AS FSTPD90_OBS,
+              CASE
+                WHEN ADD_MONTHS(FC.DATE_FIRST_DUE, 2) + 90 < TRUNC(SYSDATE) AND
+                     FC.NUM_MIN_INST_DEF90_DD <= 3 THEN
+                 1
+              END AS FSTPD90,
+              CASE
+                WHEN ADD_MONTHS(FC.DATE_FIRST_DUE, 3) + 10 < TRUNC(SYSDATE) THEN
+                 1
+              END AS FSTQPD10_OBS,
+              CASE
+                WHEN ADD_MONTHS(FC.DATE_FIRST_DUE, 3) + 10 < TRUNC(SYSDATE) AND
+                     FC.NUM_MIN_INST_DEF10_DD <= 4 THEN
+                 1
+              END AS FSTQPD10,
+              CASE
+                WHEN ADD_MONTHS(FC.DATE_FIRST_DUE, 3) + 30 < TRUNC(SYSDATE) THEN
+                 1
+              END AS FSTQPD30_OBS,
+              CASE
+                WHEN ADD_MONTHS(FC.DATE_FIRST_DUE, 3) + 30 < TRUNC(SYSDATE) AND
+                     FC.NUM_MIN_INST_DEF30_DD <= 4 THEN
+                 1
+              END AS FSTQPD30,
+              CASE
+                WHEN ADD_MONTHS(FC.DATE_FIRST_DUE, 3) + 60 < TRUNC(SYSDATE) THEN
+                 1
+              END AS FSTQPD60_OBS,
+              CASE
+                WHEN ADD_MONTHS(FC.DATE_FIRST_DUE, 3) + 60 < TRUNC(SYSDATE) AND
+                     FC.NUM_MIN_INST_DEF60_DD <= 4 THEN
+                 1
+              END AS FSTQPD60,
+              CASE
+                WHEN ADD_MONTHS(FC.DATE_FIRST_DUE, 3) + 90 < TRUNC(SYSDATE) THEN
+                 1
+              END AS FSTQPD90_OBS,
+              CASE
+                WHEN ADD_MONTHS(FC.DATE_FIRST_DUE, 3) + 90 < TRUNC(SYSDATE) AND
+                     FC.NUM_MIN_INST_DEF90_DD <= 4 THEN
+                 1
+              END AS FSTQPD90
+         FROM OWNER_DWH.F_CONTRACT_AD FC
+         JOIN OWNER_DWH.DC_PRODUCT DP
+           ON FC.SKP_PRODUCT = DP.SKP_PRODUCT
+         JOIN OWNER_DWH.DC_PRODUCT_PROFILE DPP
+           ON DP.SKP_PRODUCT_PROFILE = DPP.SKP_PRODUCT_PROFILE
+         JOIN OWNER_DWH.CL_ACCOUNTING_METHOD CAM
+           ON DPP.SKP_ACCOUNTING_METHOD = CAM.SKP_ACCOUNTING_METHOD
+          AND CAM.CODE_ACCOUNTING_METHOD IN ('CL')
+         JOIN OWNER_DWH.CL_CREDIT_STATUS CCS2
+           ON FC.SKP_CREDIT_STATUS = CCS2.SKP_CREDIT_STATUS) CON
+ON (BASE.SKP_CREDIT_CASE = CON.SKP_CREDIT_CASE)
+WHEN MATCHED THEN
+  UPDATE
+     SET BASE.CON_STATUS               = CON.CON_STATUS,
+         BASE.DATE_FIRST_DUE           = CON.DATE_FIRST_DUE,
+         BASE.DTIME_SIGNATURE_CONTRACT = CON.DTIME_SIGNATURE_CONTRACT,
+         BASE.DTIME_ACTIVATION         = CON.DTIME_ACTIVATION,
+         BASE.NUM_MIN_INST_DEF90_DD    = CON.NUM_MIN_INST_DEF90_DD,
+         BASE.NUM_MIN_INST_DEF60_DD    = CON.NUM_MIN_INST_DEF60_DD,
+         BASE.NUM_MIN_INST_DEF30_DD    = CON.NUM_MIN_INST_DEF30_DD,
+         BASE.NUM_MIN_INST_DEF15_DD    = CON.NUM_MIN_INST_DEF15_DD,
+         BASE.NUM_MIN_INST_DEF10_DD    = CON.NUM_MIN_INST_DEF10_DD,
+         BASE.NUM_OBSERV_DEF90_MAXINST = CON.NUM_OBSERV_DEF90_MAXINST,
+         BASE.NUM_OBSERV_DEF60_MAXINST = CON.NUM_OBSERV_DEF60_MAXINST,
+         BASE.NUM_OBSERV_DEF30_MAXINST = CON.NUM_OBSERV_DEF30_MAXINST,
+         BASE.NUM_OBSERV_DEF15_MAXINST = CON.NUM_OBSERV_DEF15_MAXINST,
+         BASE.NUM_OBSERV_DEF10_MAXINST = CON.NUM_OBSERV_DEF10_MAXINST,
+         BASE.FPD10                    = CON.FPD10,
+         BASE.FPD10_OBS                = CON.FPD10_OBS,
+         BASE.FPD15                    = CON.FPD15,
+         BASE.FPD15_OBS                = CON.FPD15_OBS,
+         BASE.FPD30                    = CON.FPD30,
+         BASE.FPD30_OBS                = CON.FPD30_OBS,
+         BASE.FPD60                    = CON.FPD60,
+         BASE.FPD60_OBS                = CON.FPD60_OBS,
+         BASE.FPD90                    = CON.FPD90,
+         BASE.FPD90_OBS                = CON.FPD90_OBS,
+         BASE.SPD10                    = CON.SPD10,
+         BASE.SPD10_OBS                = CON.SPD10_OBS,
+         BASE.SPD30                    = CON.SPD30,
+         BASE.SPD30_OBS                = CON.SPD30_OBS,
+         BASE.SPD60                    = CON.SPD60,
+         BASE.SPD60_OBS                = CON.SPD60_OBS,
+         BASE.SPD90                    = CON.SPD90,
+         BASE.SPD90_OBS                = CON.SPD90_OBS,
+         BASE.TPD10                    = CON.TPD10,
+         BASE.TPD10_OBS                = CON.TPD10_OBS,
+         BASE.TPD30                    = CON.TPD30,
+         BASE.TPD30_OBS                = CON.TPD30_OBS,
+         BASE.TPD60                    = CON.TPD60,
+         BASE.TPD60_OBS                = CON.TPD60_OBS,
+         BASE.TPD90                    = CON.TPD90,
+         BASE.TPD90_OBS                = CON.TPD90_OBS,
+         BASE.QPD10                    = CON.QPD10,
+         BASE.QPD10_OBS                = CON.QPD10_OBS,
+         BASE.QPD30                    = CON.QPD30,
+         BASE.QPD30_OBS                = CON.QPD30_OBS,
+         BASE.QPD60                    = CON.QPD60,
+         BASE.QPD60_OBS                = CON.QPD60_OBS,
+         BASE.QPD90                    = CON.QPD90,
+         BASE.QPD90_OBS                = CON.QPD90_OBS,
+         BASE.FSPD10                   = CON.FSPD10,
+         BASE.FSPD10_OBS               = CON.FSPD10_OBS,
+         BASE.FSPD30                   = CON.FSPD30,
+         BASE.FSPD30_OBS               = CON.FSPD30_OBS,
+         BASE.FSPD60                   = CON.FSPD60,
+         BASE.FSPD60_OBS               = CON.FSPD60_OBS,
+         BASE.FSPD90                   = CON.FSPD90,
+         BASE.FSPD90_OBS               = CON.FSPD90_OBS,
+         BASE.FSTPD10                  = CON.FSTPD10,
+         BASE.FSTPD10_OBS              = CON.FSTPD10_OBS,
+         BASE.FSTPD30                  = CON.FSTPD30,
+         BASE.FSTPD30_OBS              = CON.FSTPD30_OBS,
+         BASE.FSTPD60                  = CON.FSTPD60,
+         BASE.FSTPD60_OBS              = CON.FSTPD60_OBS,
+         BASE.FSTPD90                  = CON.FSTPD90,
+         BASE.FSTPD90_OBS              = CON.FSTPD90_OBS,
+         BASE.FSTQPD10                 = CON.FSTQPD10,
+         BASE.FSTQPD10_OBS             = CON.FSTQPD10_OBS,
+         BASE.FSTQPD30                 = CON.FSTQPD30,
+         BASE.FSTQPD30_OBS             = CON.FSTQPD30_OBS,
+         BASE.FSTQPD60                 = CON.FSTQPD60,
+         BASE.FSTQPD60_OBS             = CON.FSTQPD60_OBS,
+         BASE.FSTQPD90                 = CON.FSTQPD90,
+         BASE.FSTQPD90_OBS             = CON.FSTQPD90_OBS
