@@ -1,0 +1,18 @@
+INSERT /*+APPEND*/
+INTO AP_COLL.T_MUCH_ASSIGNED_DETAIL_DPD
+  SELECT DISTINCT A.*,
+                  DPD.DPD,
+                  CASE
+                    WHEN DPD.DPD <= 410 THEN
+                     A.ASSIGNEDDATE + 90
+                    WHEN TRUNC(A.ASSIGNEDDATE) < '01-05-2015' AND
+                         DPD.DPD > 410 THEN
+                     A.ASSIGNEDDATE + 180
+                    WHEN TRUNC(A.ASSIGNEDDATE) >= '01-05-2015' AND
+                         DPD.DPD > 410 THEN
+                     A.ASSIGNEDDATE + 270
+                  END AS ENDDATE_PACKAGE_CALCULATE
+    FROM AP_COLL.T_MUCH_ASSIGNED_DETAIL_NO_DPD A
+    LEFT JOIN AP_COLL.T_COL_DPD_LOXON DPD
+      ON A.CONTRACTNR = DPD.TEXT_CONTRACT_NUMBER
+     AND DPD.ADATE = TRUNC(A.ASSIGNEDDATE)
